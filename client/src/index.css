@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-white;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-md font-medium transition-all duration-200;
+  }
+  
+  .btn-primary {
+    @apply btn bg-primary-600 text-white hover:bg-primary-700 disabled:opacity-70 disabled:cursor-not-allowed shadow-sm hover:shadow-md;
+  }
+  
+  .btn-secondary {
+    @apply btn bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600;
+  }
+
+  .input {
+    @apply w-full px-4 py-2 pl-10 rounded-md border border-gray-300 
+           focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent 
+           dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100
+           transition-all duration-200;
+  }
+
+  .card {
+    @apply bg-white p-8 rounded-xl shadow-lg dark:bg-gray-800 
+           transition-all duration-300 hover:shadow-xl
+           backdrop-blur-sm backdrop-filter;
+  }
+
+  .auth-container {
+    @apply min-h-screen flex items-center justify-center px-4 
+           bg-gradient-to-br from-gray-50 to-gray-100
+           dark:from-gray-900 dark:to-gray-800;
+  }
+
+  .auth-card {
+    @apply card w-full max-w-md;
+  }
+
+  .input-group {
+    @apply relative mb-4;
+  }
+
+  .input-icon {
+    @apply absolute left-3 top-1/2 transform -translate-y-1/2 
+           text-gray-400 dark:text-gray-500;
+  }
+
+  .auth-error {
+    @apply bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 
+           text-red-700 dark:text-red-400 px-4 py-3 rounded-lg relative mb-4
+           flex items-center;
+  }
+
+  .auth-link {
+    @apply text-primary-600 hover:text-primary-700 dark:text-primary-400 
+           hover:underline transition-colors duration-200;
+  }
+}
