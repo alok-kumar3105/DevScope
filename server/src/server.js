@@ -11,7 +11,12 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'https://devscope.vercel.app',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -25,34 +30,30 @@ app.use('/api/auth', authRoutes);
 app.use('/api/github', githubRoutes);
 app.use('/api/user', userRoutes);
 
+// Health check endpoint for Render
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', message: 'DevScope API is running' });
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: 'Something went wrong!' });
 });
 
-// Connect to MongoDB
-console.log('Attempting to connect to MongoDB...');
-if (!process.env.MONGODB_URI) {
-  console.error('MONGODB_URI is not defined in environment variables');
-  process.exit(1);
-}
+// MongoDB connection with retry logic
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('Connected to MongoDB successfully');
+  } catch (err) {
+    console.error('MongoDB connection error:', err);
+    // Retry connection after 5 seconds
+    setTimeout(connectDB, 5000);
+  }
+};
 
-console.log('MongoDB URI format check:', {
-  hasProtocol: process.env.MONGODB_URI.startsWith('mongodb+srv://'),
-  includesHost: process.env.MONGODB_URI.includes('@'),
-  includesDatabase: process.env.MONGODB_URI.includes('/')
-});
-
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB successfully'))
-  .catch((err) => {
-    console.error('MongoDB connection error details:', {
-      error: err.message,
-      code: err.code,
-      uri: process.env.MONGODB_URI.replace(/\/\/[^:]+:[^@]+@/, '//****:****@') // Hide credentials in logs
-    });
-  });
+connectDB();
 
 // Start server
 const PORT = process.env.PORT || 5001;

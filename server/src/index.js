@@ -12,7 +12,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'https://yourusername.github.io',
+  origin: process.env.FRONTEND_URL || 'https://dev-scope-theta.vercel.app',
   credentials: true
 }));
 

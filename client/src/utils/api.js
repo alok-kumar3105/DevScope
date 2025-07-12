@@ -1,15 +1,14 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
-
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5001/api',
+  withCredentials: true,
   headers: {
-    'Content-Type': 'application/json',
-  },
+    'Content-Type': 'application/json'
+  }
 });
 
-// Add auth token to requests if available
+// Add a request interceptor for authentication
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -23,7 +22,7 @@ api.interceptors.request.use(
   }
 );
 
-// Handle token expiration
+// Add a response interceptor for error handling
 api.interceptors.response.use(
   (response) => response,
   (error) => {
